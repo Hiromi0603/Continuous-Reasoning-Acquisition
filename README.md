@@ -419,3 +419,11 @@ Citation metadata is available in [`CITATION.cff`](./CITATION.cff).
 Documentation, specifications, and example records in this repository are released under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). See [`LICENSE`](./LICENSE).
 
 The publication of this conceptual method and data model does not imply that all implementation-specific systems, algorithms, prompts, or application code are included in this repository.
+
+---
+
+## AI assistance
+
+Large language models were used to help draft, restructure, and review the documentation, specifications, schema, and examples in this repository, and to check consistency across files.
+
+The method, the design decisions in the data model, the Lessonary implementation, and the final content are the author's responsibility.
