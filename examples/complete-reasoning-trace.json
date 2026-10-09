@@ -1,0 +1,366 @@
+{
+  "schema_version": "0.1.0",
+  "record_type": "reasoning_trace",
+  "example_type": "illustrative",
+  "description": "Illustrative example of a complete Continuous Reasoning Acquisition record. This example is not derived from real user data.",
+
+  "subject": {
+    "id": "subject_001",
+    "type": "human",
+    "pseudonymous": true
+  },
+
+  "event": {
+    "id": "event_001",
+    "type": "customer_meeting",
+    "title": "Postponed planned price increase discussion",
+    "description": "During a regular meeting with an existing customer, the Subject decided not to present a planned price increase.",
+    "occurred_at": "2026-09-01T10:00:00+09:00",
+    "context": {
+      "domain": "B2B sales",
+      "organization": "Customer B",
+      "location": null
+    }
+  },
+
+  "temporal_information": {
+    "event_occurred_at": "2026-09-01T10:00:00+09:00",
+    "initial_recorded_at": "2026-09-01T17:30:00+09:00",
+    "elicitation_started_at": "2026-09-01T17:31:00+09:00",
+    "elicitation_completed_at": "2026-09-01T17:34:00+09:00",
+    "trace_constructed_at": "2026-09-01T17:35:00+09:00"
+  },
+
+  "action": {
+    "id": "action_001",
+    "type": "decision_action",
+    "content": "Postponed presenting the planned price increase until a later meeting."
+  },
+
+  "outcome": {
+    "id": "outcome_001",
+    "type": "immediate_outcome",
+    "content": "The price increase was not discussed during this meeting.",
+    "observed_at": "2026-09-01T11:00:00+09:00"
+  },
+
+  "sources": [
+    {
+      "id": "source_001",
+      "type": "work_record",
+      "origin": "subject",
+      "content": "Postponed the price increase discussion this time. Will raise it at the next meeting.",
+      "captured_at": "2026-09-01T17:30:00+09:00"
+    },
+    {
+      "id": "source_002",
+      "type": "elicitation_response",
+      "origin": "subject",
+      "elicitation_id": "elicitation_001",
+      "content": "The person in charge seemed to be under pressure from their manager, and the atmosphere was tense.",
+      "captured_at": "2026-09-01T17:32:00+09:00"
+    },
+    {
+      "id": "source_003",
+      "type": "elicitation_response",
+      "origin": "subject",
+      "elicitation_id": "elicitation_002",
+      "content": "I thought that even if I raised it then, they probably would not be able to get internal approval.",
+      "captured_at": "2026-09-01T17:33:00+09:00"
+    }
+  ],
+
+  "elicitation_history": {
+    "gaps": [
+      {
+        "id": "gap_001",
+        "type": "missing_reason",
+        "target": "reason_for_action",
+        "description": "The reason for postponing the price increase discussion was not available in the initial source.",
+        "detected_at": "initial"
+      },
+      {
+        "id": "gap_002",
+        "type": "missing_context",
+        "target": "situation_recognition",
+        "description": "The situation or observation that influenced the decision was not available in the initial source.",
+        "detected_at": "initial"
+      },
+      {
+        "id": "gap_003",
+        "type": "missing_decision_criterion",
+        "target": "decision_criterion",
+        "description": "The decision criterion used to determine whether the price increase should be raised was not explicitly available.",
+        "detected_at": "initial"
+      },
+      {
+        "id": "gap_004",
+        "type": "missing_interpretation",
+        "target": "interpretation_of_situation",
+        "description": "The Subject's interpretation of why the observed situation made the timing unsuitable was not yet explicit.",
+        "detected_at": "elicitation_001"
+      }
+    ],
+
+    "initial_state": {
+      "available_sources": [
+        "source_001"
+      ],
+      "known_information": [
+        {
+          "type": "action",
+          "content": "The Subject postponed the planned price increase discussion."
+        }
+      ],
+      "active_gap_ids": [
+        "gap_001",
+        "gap_002",
+        "gap_003"
+      ]
+    },
+
+    "elicitation_steps": [
+      {
+        "id": "elicitation_001",
+        "sequence": 1,
+        "triggered_by_gap": "gap_001",
+        "target_information": "reason_for_action",
+        "question": "Why did you decide not to raise the price increase this time?",
+        "response_source": "source_002",
+        "result": "answered",
+        "resolved_gaps": [
+          "gap_001",
+          "gap_002"
+        ],
+        "new_gaps_detected": [
+          "gap_004"
+        ]
+      },
+      {
+        "id": "elicitation_002",
+        "sequence": 2,
+        "triggered_by_gap": "gap_004",
+        "target_information": "interpretation_of_situation",
+        "question": "What made you think this was not a good timing to raise the price increase?",
+        "response_source": "source_003",
+        "result": "answered",
+        "resolved_gaps": [
+          "gap_004"
+        ],
+        "new_gaps_detected": []
+      }
+    ],
+
+    "final_gap_states": [
+      {
+        "gap_id": "gap_001",
+        "source_state": "not_observed",
+        "elicitation_state": "elicited_and_resolved",
+        "resolved_by": "elicitation_001"
+      },
+      {
+        "gap_id": "gap_002",
+        "source_state": "not_observed",
+        "elicitation_state": "elicited_and_resolved",
+        "resolved_by": "elicitation_001",
+        "note": "Resolved incidentally by a response targeting another Gap."
+      },
+      {
+        "gap_id": "gap_003",
+        "source_state": "not_observed",
+        "elicitation_state": "not_elicited"
+      },
+      {
+        "gap_id": "gap_004",
+        "source_state": "observed_but_insufficient",
+        "elicitation_state": "elicited_and_resolved",
+        "resolved_by": "elicitation_002"
+      }
+    ],
+
+    "stopping": {
+      "reason": "max_elicitation_steps_reached",
+      "max_elicitation_steps": 2,
+      "completed_elicitation_steps": 2,
+      "remaining_unresolved_gaps": [],
+      "remaining_not_elicited_gaps": [
+        "gap_003"
+      ]
+    }
+  },
+
+  "reasoning_trace": {
+    "id": "trace_001",
+    "subject_id": "subject_001",
+    "event_id": "event_001",
+
+    "reasoning_units": [
+      {
+        "id": "unit_001",
+        "type": "action",
+        "action_id": "action_001",
+        "content": "The Subject postponed presenting the planned price increase.",
+        "grounding": {
+          "source_ids": [
+            "source_001"
+          ]
+        },
+        "derivation": {
+          "type": "direct",
+          "actor": "system"
+        },
+        "verification": {
+          "status": "unconfirmed"
+        },
+        "confidence": {
+          "value": "high",
+          "method": "model_estimate"
+        }
+      },
+
+      {
+        "id": "unit_002",
+        "type": "situation_recognition",
+        "content": "The Subject perceived that the customer representative was under pressure from their manager and that the atmosphere was tense.",
+        "related_gap_ids": [
+          "gap_001",
+          "gap_002"
+        ],
+        "grounding": {
+          "source_ids": [
+            "source_002"
+          ]
+        },
+        "derivation": {
+          "type": "extracted",
+          "actor": "system"
+        },
+        "verification": {
+          "status": "unconfirmed"
+        },
+        "confidence": {
+          "value": "high",
+          "method": "model_estimate"
+        }
+      },
+
+      {
+        "id": "unit_003",
+        "type": "interpretation",
+        "content": "The Subject interpreted the situation as one in which internal approval for the price increase was unlikely.",
+        "related_gap_ids": [
+          "gap_004"
+        ],
+        "grounding": {
+          "source_ids": [
+            "source_003"
+          ]
+        },
+        "derivation": {
+          "type": "extracted",
+          "actor": "system"
+        },
+        "verification": {
+          "status": "confirmed",
+          "method": "subject_review",
+          "verified_at": "2026-09-02T09:00:00+09:00"
+        },
+        "confidence": {
+          "value": "medium",
+          "method": "model_estimate",
+          "note": "The source response contains hedging (\"probably\"), which reduces extraction certainty."
+        }
+      },
+
+      {
+        "id": "unit_004",
+        "type": "decision_rule",
+        "content": "If internal approval appears unlikely under the current conditions, defer raising the price increase until a more suitable opportunity.",
+        "related_gap_ids": [
+          "gap_003"
+        ],
+        "grounding": {
+          "source_ids": [
+            "source_002",
+            "source_003"
+          ]
+        },
+        "derivation": {
+          "type": "inferred",
+          "actor": "system",
+          "method": "llm_inference",
+          "model": "example-model",
+          "model_version": "example-1.0",
+          "derived_at": "2026-09-01T17:35:00+09:00"
+        },
+        "verification": {
+          "status": "unconfirmed"
+        },
+        "confidence": {
+          "value": "medium",
+          "method": "model_estimate",
+          "note": "Inferred from two sources without direct elicitation of the decision criterion."
+        }
+      },
+
+      {
+        "id": "unit_005",
+        "type": "outcome",
+        "outcome_id": "outcome_001",
+        "content": "The price increase was not discussed during the meeting.",
+        "grounding": {
+          "source_ids": [
+            "source_001"
+          ]
+        },
+        "derivation": {
+          "type": "direct",
+          "actor": "system"
+        },
+        "verification": {
+          "status": "unconfirmed"
+        },
+        "confidence": {
+          "value": "high",
+          "method": "model_estimate"
+        }
+      }
+    ],
+
+    "relations": [
+      {
+        "from": "unit_002",
+        "type": "supports",
+        "to": "unit_003"
+      },
+      {
+        "from": "unit_003",
+        "type": "leads_to",
+        "to": "unit_001"
+      },
+      {
+        "from": "unit_004",
+        "type": "supports",
+        "to": "unit_001"
+      },
+      {
+        "from": "unit_001",
+        "type": "leads_to",
+        "to": "unit_005"
+      }
+    ]
+  },
+
+  "representation": {
+    "schema": "illustrative_reasoning_representation_v0.1",
+    "layer": "representation_layer",
+    "derived_from_trace": "trace_001",
+    "note": "This representation is illustrative and can be replaced by a domain-specific schema."
+  },
+
+  "provenance": {
+    "created_by": "Continuous Reasoning Acquisition example",
+    "created_at": "2026-10-08T00:00:00+09:00",
+    "note": "This file is an illustrative specification example and does not contain real participant data."
+  }
+}

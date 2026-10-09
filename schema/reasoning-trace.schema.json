@@ -1,0 +1,455 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Hiromi0603/Continuous-Reasoning-Acquisition/main/schema/reasoning-trace.schema.json",
+  "title": "Continuous Reasoning Acquisition — Reasoning Trace Record",
+  "description": "Implementation-facing JSON Schema for a Continuous Reasoning Acquisition (CRA) record. Only distinctions that must not be lost are required; other fields are optional and implementations may add properties. Notes: (1) Referential integrity between identifiers (e.g., grounding.source_ids referring to existing sources) is not enforced by this schema and should be validated separately. (2) Under Draft 2020-12, 'format' is treated as an annotation by default; enable format assertion in your validator if strict date-time validation is required.",
+  "type": "object",
+
+  "required": [
+    "schema_version",
+    "record_type",
+    "subject",
+    "event",
+    "sources",
+    "reasoning_trace"
+  ],
+
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "examples": ["0.1.0"]
+    },
+    "record_type": {
+      "const": "reasoning_trace"
+    },
+    "example_type": {
+      "type": "string",
+      "description": "Optional marker for example or test records.",
+      "examples": ["illustrative"]
+    },
+    "description": { "type": "string" },
+    "subject": { "$ref": "#/$defs/subject" },
+    "event": { "$ref": "#/$defs/event" },
+    "temporal_information": { "$ref": "#/$defs/temporalInformation" },
+    "action": { "$ref": "#/$defs/action" },
+    "outcome": { "$ref": "#/$defs/outcome" },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "elicitation_history": { "$ref": "#/$defs/elicitationHistory" },
+    "reasoning_trace": { "$ref": "#/$defs/reasoningTrace" },
+    "representation": { "$ref": "#/$defs/representation" },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+
+  "$defs": {
+    "idArray": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+
+    "nonEmptyIdArray": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+
+    "subject": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "pseudonymous": { "type": "boolean" }
+      }
+    },
+
+    "event": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "context": { "type": "object" }
+      }
+    },
+
+    "temporalInformation": {
+      "type": "object",
+      "properties": {
+        "event_occurred_at": { "type": "string", "format": "date-time" },
+        "initial_recorded_at": { "type": "string", "format": "date-time" },
+        "elicitation_started_at": { "type": "string", "format": "date-time" },
+        "elicitation_completed_at": { "type": "string", "format": "date-time" },
+        "trace_constructed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "action": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+
+    "outcome": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "content": { "type": "string" },
+        "observed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "source": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "examples": [
+            "self_report",
+            "subject_input",
+            "work_record",
+            "elicitation_response",
+            "conversation",
+            "conversation_transcript",
+            "document",
+            "operational_log",
+            "operational_record",
+            "action_record",
+            "outcome_record",
+            "sensor_data"
+          ]
+        },
+        "origin": {
+          "type": "string",
+          "examples": ["subject", "system", "third_party"]
+        },
+        "elicitation_id": { "type": "string" },
+        "content": { "type": "string" },
+        "captured_at": { "type": "string", "format": "date-time" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "const": "elicitation_response" } },
+            "required": ["type"]
+          },
+          "then": {
+            "required": ["elicitation_id"]
+          }
+        }
+      ]
+    },
+
+    "elicitationHistory": {
+      "type": "object",
+      "description": "Optional at record level. Required when adaptive elicitation is used.",
+      "required": ["gaps", "elicitation_steps", "final_gap_states", "stopping"],
+      "properties": {
+        "gaps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/gap" }
+        },
+        "initial_state": { "type": "object" },
+        "elicitation_steps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/elicitationStep" }
+        },
+        "final_gap_states": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/gapState" }
+        },
+        "stopping": { "$ref": "#/$defs/stopping" }
+      }
+    },
+
+    "gap": {
+      "type": "object",
+      "required": ["id", "type", "target"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "examples": [
+            "missing_reason",
+            "missing_context",
+            "missing_interpretation",
+            "missing_decision_criterion",
+            "ambiguity",
+            "unsupported_inference",
+            "conflicting_information"
+          ]
+        },
+        "target": { "type": "string" },
+        "description": { "type": "string" },
+        "detected_at": {
+          "type": "string",
+          "description": "Either 'initial' or the id of the elicitation step after which the gap was detected.",
+          "examples": ["initial", "elicitation_001"]
+        }
+      }
+    },
+
+    "elicitationStep": {
+      "type": "object",
+      "required": ["id", "sequence", "triggered_by_gap", "question", "result"],
+      "properties": {
+        "id": { "type": "string" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "triggered_by_gap": { "type": "string" },
+        "target_information": { "type": "string" },
+        "question": {
+          "type": "string",
+          "description": "Exact question wording presented to the Subject."
+        },
+        "response_source": {
+          "type": ["string", "null"],
+          "description": "Id of the Source created from the response. Null only when no response Source was created (e.g., skipped)."
+        },
+        "result": {
+          "type": "string",
+          "examples": ["answered", "answered_but_unresolved", "skipped"]
+        },
+        "resolved_gaps": { "$ref": "#/$defs/idArray" },
+        "new_gaps_detected": { "$ref": "#/$defs/idArray" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "gapState": {
+      "type": "object",
+      "required": ["gap_id", "source_state", "elicitation_state"],
+      "properties": {
+        "gap_id": { "type": "string" },
+        "source_state": {
+          "enum": ["not_observed", "observed_but_insufficient"]
+        },
+        "elicitation_state": {
+          "enum": ["not_elicited", "elicited_and_resolved", "elicited_but_unresolved"]
+        },
+        "resolved_by": { "type": "string" },
+        "elicitation_id": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "elicitation_state": { "const": "elicited_and_resolved" } },
+            "required": ["elicitation_state"]
+          },
+          "then": {
+            "required": ["resolved_by"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "elicitation_state": { "const": "elicited_but_unresolved" } },
+            "required": ["elicitation_state"]
+          },
+          "then": {
+            "required": ["elicitation_id"]
+          }
+        }
+      ]
+    },
+
+    "stopping": {
+      "type": "object",
+      "required": ["reason"],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "examples": [
+            "sufficient_information_acquired",
+            "max_elicitation_steps_reached",
+            "low_expected_information_gain",
+            "subject_unable_to_continue",
+            "cost_threshold_reached",
+            "event_importance_threshold"
+          ]
+        },
+        "max_elicitation_steps": { "type": "integer", "minimum": 0 },
+        "completed_elicitation_steps": { "type": "integer", "minimum": 0 },
+        "remaining_unresolved_gaps": { "$ref": "#/$defs/idArray" },
+        "remaining_not_elicited_gaps": { "$ref": "#/$defs/idArray" }
+      }
+    },
+
+    "reasoningTrace": {
+      "type": "object",
+      "required": ["id", "subject_id", "event_id", "reasoning_units"],
+      "properties": {
+        "id": { "type": "string" },
+        "subject_id": { "type": "string" },
+        "event_id": { "type": "string" },
+        "reasoning_units": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reasoningUnit" }
+        },
+        "relations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relation" }
+        }
+      }
+    },
+
+    "reasoningUnit": {
+      "type": "object",
+      "required": ["id", "type", "content", "grounding", "derivation", "verification"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "description": "Semantic type belongs to the Representation Layer and may be reclassified later.",
+          "examples": [
+            "observation",
+            "situation_recognition",
+            "interpretation",
+            "hypothesis",
+            "decision_rule",
+            "rationale",
+            "action",
+            "outcome"
+          ]
+        },
+        "content": { "type": "string" },
+        "action_id": { "type": "string" },
+        "outcome_id": { "type": "string" },
+        "related_gap_ids": { "$ref": "#/$defs/idArray" },
+        "grounding": { "$ref": "#/$defs/grounding" },
+        "derivation": { "$ref": "#/$defs/derivation" },
+        "verification": { "$ref": "#/$defs/verification" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      }
+    },
+
+    "grounding": {
+      "type": "object",
+      "description": "A Reasoning Unit must be grounded in at least one Source or Reasoning Unit. Omit unused keys instead of providing empty arrays.",
+      "properties": {
+        "source_ids": { "$ref": "#/$defs/nonEmptyIdArray" },
+        "unit_ids": {
+          "$ref": "#/$defs/nonEmptyIdArray",
+          "description": "Existing Reasoning Units used as inputs for higher-level Derivations (e.g., abstraction or synthesis)."
+        },
+        "spans": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/groundingSpan" }
+        }
+      },
+      "anyOf": [
+        { "required": ["source_ids"] },
+        { "required": ["unit_ids"] }
+      ]
+    },
+
+    "groundingSpan": {
+      "type": "object",
+      "required": ["source_id"],
+      "properties": {
+        "source_id": { "type": "string" },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 0 }
+      }
+    },
+
+    "derivation": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Open vocabulary. Recommended values are listed in examples.",
+          "examples": ["direct", "extracted", "inferred", "abstracted", "synthesized"]
+        },
+        "actor": {
+          "type": "string",
+          "examples": ["system", "human"]
+        },
+        "method": { "type": "string" },
+        "model": { "type": "string" },
+        "model_version": { "type": "string" },
+        "pipeline_version": { "type": "string" },
+        "derived_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["confirmed", "unconfirmed", "conflicting", "undetermined"]
+        },
+        "method": {
+          "type": "string",
+          "examples": ["subject_review", "expert_review", "cross_source_confirmation", "system_check"]
+        },
+        "verified_at": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "confidence": {
+      "description": "Optional. Omit entirely if Confidence is not estimated; do not fill with a default value.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": { "type": ["string", "number"] },
+            "method": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        }
+      ]
+    },
+
+    "relation": {
+      "type": "object",
+      "required": ["from", "type", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "type": {
+          "type": "string",
+          "examples": ["supports", "leads_to", "tests", "contradicts", "revises"]
+        },
+        "to": { "type": "string" }
+      }
+    },
+
+    "representation": {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string" },
+        "layer": { "type": "string" },
+        "derived_from_trace": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "created_by": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

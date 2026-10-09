@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use or build upon this work, please cite the corresponding Zenodo preprint."
+title: "Continuous Reasoning Acquisition"
+abstract: >-
+  Reference architecture, conceptual data model, JSON Schema, and illustrative
+  records for adding a reasoning-data layer to AI applications, SaaS products,
+  internal tools, and research systems.
+type: software
+authors:
+  - family-names: Shimamoto
+    given-names: Hiromi
+    orcid: "https://orcid.org/0009-0005-6885-2263"
+license: CC-BY-4.0
+repository-code: "https://github.com/Hiromi0603/Continuous-Reasoning-Acquisition"
+url: "https://github.com/Hiromi0603/Continuous-Reasoning-Acquisition"
+keywords:
+  - Continuous Reasoning Acquisition
+  - Reasoning Trace
+  - Adaptive Elicitation
+  - Data Provenance
+  - Human Reasoning
+preferred-citation:
+  type: article
+  title: "Continuous Reasoning Acquisition:日常的なEventから縦断的・複数主体のReasoning Datasetを構築する方法"
+  authors:
+    - family-names: Shimamoto
+      given-names: Hiromi
+      orcid: "https://orcid.org/0009-0005-6885-2263"
+  doi: "10.5281/zenodo.23215881"
+  publisher:
+    name: Zenodo
+  year: 2026
+  notes: "Preprint"
+references:
+  - type: article
+    title: "Thought Engineering: A Structural Model of Human Cognition"
+    authors:
+      - family-names: Shimamoto
+        given-names: Hiromi
+        orcid: "https://orcid.org/0009-0005-6885-2263"
+    doi: "10.5281/zenodo.19450037"
+    publisher:
+      name: Zenodo
+    year: 2026
+    notes: "Preprint"
