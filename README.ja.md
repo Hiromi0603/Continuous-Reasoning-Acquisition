@@ -34,6 +34,14 @@ CRAは観測されたイベントから既知の情報を抽出し、不足し�
 
 ---
 
+## CRA Remote MCPを試す
+
+CRAをRemote MCPサービスとして利用できるようになりました。Claude Desktop、OpenAI Codex、Google AntigravityでE2E動作を確認済みです。CrossAIでは招待制の30日間の無償体験を提供しています。
+
+接続ガイド・利用条件・Reasoning Traceのサンプルは、[CRA Remote MCP専用リポジトリ](https://github.com/Hiromi0603/CRA-Remote-MCP)をご覧ください。
+
+---
+
 ## CRAで構築できるもの
 
 CRAは、次のようなシステムに推論情報の取得機能を追加するために利用できます。

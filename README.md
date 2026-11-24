@@ -36,6 +36,14 @@ Longitudinal Reasoning Dataset
 
 ---
 
+## Try CRA Remote MCP
+
+CRA is now available as a remote MCP service. It has been verified end to end with Claude Desktop, OpenAI Codex, and Google Antigravity. CrossAI offers a free 30-day trial by invitation.
+
+The [CRA Remote MCP repository](https://github.com/Hiromi0603/CRA-Remote-MCP) contains connection guides, trial terms, and a sample Reasoning Trace.
+
+---
+
 ## What you can build with it
 
 CRA can be used to add reasoning capture to systems such as:
